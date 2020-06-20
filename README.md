@@ -6,15 +6,15 @@
 # Documentation
 
 ### Display Components
-- **year(String, CGFloat? = nil)** : (dateformat, width)
-- **month(String, CGFloat? = nil)** : (dateformat, width)
-- **day(String, CGFloat? = nil)** : (dateformat, width)
+- **year(String, CGFloat? = nil)** : (format, width)
+- **month(String, CGFloat? = nil)** : (format, width)
+- **day(String, CGFloat? = nil)** : (format, width)
 - **hour24(CGFloat? = nil)** : (width)
 - **hour12(CGFloat? = nil)** : (width)
 - **ampm(CGFloat? = nil)** : (width)
 - **minute(CGFloat? = nil)** : (width)
 - **second(CGFloat? = nil)** : (width)
-- **fullDate(String, CGFloat? = nil)** : (dateformat, width)
+- **fullDate(String, CGFloat? = nil)** : (format, width)
 
 ```swift
 import UIKit

@@ -14,6 +14,7 @@
 		06C3A82A249E1FC800912531 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 06C3A829249E1FC800912531 /* Assets.xcassets */; };
 		06C3A82D249E1FC800912531 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06C3A82B249E1FC800912531 /* LaunchScreen.storyboard */; };
 		06C3A838249E1FC800912531 /* SundeedDatePickerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C3A837249E1FC800912531 /* SundeedDatePickerTests.swift */; };
+		06C3A844249E201400912531 /* SundeedDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C3A843249E201400912531 /* SundeedDatePicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +39,7 @@
 		06C3A833249E1FC800912531 /* SundeedDatePickerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SundeedDatePickerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		06C3A837249E1FC800912531 /* SundeedDatePickerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SundeedDatePickerTests.swift; sourceTree = "<group>"; };
 		06C3A839249E1FC800912531 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		06C3A843249E201400912531 /* SundeedDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SundeedDatePicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +63,7 @@
 		06C3A814249E1FC600912531 = {
 			isa = PBXGroup;
 			children = (
+				06C3A842249E1FD000912531 /* Library */,
 				06C3A81F249E1FC600912531 /* SundeedDatePicker */,
 				06C3A836249E1FC800912531 /* SundeedDatePickerTests */,
 				06C3A81E249E1FC600912531 /* Products */,
@@ -97,6 +100,14 @@
 				06C3A839249E1FC800912531 /* Info.plist */,
 			);
 			path = SundeedDatePickerTests;
+			sourceTree = "<group>";
+		};
+		06C3A842249E1FD000912531 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				06C3A843249E201400912531 /* SundeedDatePicker.swift */,
+			);
+			path = Library;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -201,6 +212,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				06C3A825249E1FC600912531 /* ViewController.swift in Sources */,
+				06C3A844249E201400912531 /* SundeedDatePicker.swift in Sources */,
 				06C3A821249E1FC600912531 /* AppDelegate.swift in Sources */,
 				06C3A823249E1FC600912531 /* SceneDelegate.swift in Sources */,
 			);

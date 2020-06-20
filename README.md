@@ -4,6 +4,18 @@
 
 ![Example1](https://raw.githubusercontent.com/noursandid/SundeedDatePicker/master/screenshots/Example1.png)![Example1](https://raw.githubusercontent.com/noursandid/SundeedDatePicker/master/screenshots/Example2.png)![Example1](https://raw.githubusercontent.com/noursandid/SundeedDatePicker/master/screenshots/Example3.png)![Example1](https://raw.githubusercontent.com/noursandid/SundeedDatePicker/master/screenshots/Example4.png)
 # Documentation
+
+### Display Components
+- **year(String, CGFloat? = nil)** : (dateformat, width)
+- **month(String, CGFloat? = nil)** : (dateformat, width)
+- **day(String, CGFloat? = nil)** : (dateformat, width)
+- **hour24(CGFloat? = nil)** : (width)
+- **hour12(CGFloat? = nil)** : (width)
+- **ampm(CGFloat? = nil)** : (width)
+- **minute(CGFloat? = nil)** : (width)
+- **second(CGFloat? = nil)** : (width)
+- **fullDate(String, CGFloat? = nil)** : (dateformat, width)
+
 ```swift
 import UIKit
 
@@ -21,9 +33,11 @@ class ViewController: UIViewController {
     }
 }
 ```
+# Installation
+
+Well it's just one file, you can find it in the folder called **Library**, just copy and paste it in your project :)
 
 
-```
 License
 --------
 MIT

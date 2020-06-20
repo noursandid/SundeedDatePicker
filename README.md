@@ -3,6 +3,12 @@
 # SundeedDatePicker
 
 ![Example1](https://raw.githubusercontent.com/noursandid/SundeedDatePicker/master/screenshots/Example1.png)![Example1](https://raw.githubusercontent.com/noursandid/SundeedDatePicker/master/screenshots/Example2.png)![Example1](https://raw.githubusercontent.com/noursandid/SundeedDatePicker/master/screenshots/Example3.png)![Example1](https://raw.githubusercontent.com/noursandid/SundeedDatePicker/master/screenshots/Example4.png)
+
+# Benefits
+- Select the date components separately
+- Select format for each component
+- Arrange your components as you wish
+
 # Documentation
 
 ### Display Components
@@ -36,9 +42,3 @@ class ViewController: UIViewController {
 # Installation
 
 Well it's just one file, you can find it in the folder called **Library**, just copy and paste it in your project :)
-
-
-License
---------
-MIT
-

@@ -12,15 +12,15 @@
 # Documentation
 
 ### Display Components
-- **year(String, CGFloat? = nil)** : (format, width)
-- **month(String, CGFloat? = nil)** : (format, width)
-- **day(String, CGFloat? = nil)** : (format, width)
-- **hour24(CGFloat? = nil)** : (width)
-- **hour12(CGFloat? = nil)** : (width)
-- **ampm(CGFloat? = nil)** : (width)
-- **minute(CGFloat? = nil)** : (width)
-- **second(CGFloat? = nil)** : (width)
-- **fullDate(String, CGFloat? = nil)** : (format, width)
+- **year(format: String, width: CGFloat? = nil)**
+- **month(format: String, width: CGFloat? = nil)**
+- **day(format: String, width: CGFloat? = nil)**
+- **hour24(width: CGFloat? = nil)**
+- **hour12(width: CGFloat? = nil)**
+- **ampm(width: CGFloat? = nil)**
+- **minute(width: CGFloat? = nil)**
+- **second(width: CGFloat? = nil)**
+- **fullDate(format: String, width:  CGFloat? = nil)**
 
 ```swift
 import UIKit
@@ -30,8 +30,14 @@ class ViewController: UIViewController {
     @IBOutlet weak var datePicker: SundeedDatePicker!
     override func viewDidLoad() {
         super.viewDidLoad()
-        datePicker.display = [ .month("MMM"), .day("dd", 50), .year("yyyy"),
-                               .hour12(40), .minute(40), .second(40), .ampm(50) ]
+        datePicker.display = [ .month(format: "MMM"),
+                               .day(format: "dd", size: 50),
+                               .year(format: "yyyy"),
+                               .hour12(size: 40),
+                               .minute(size: 40),
+                               .second(size: 40),
+                               .ampm(size: 50) ]
+        datePicker.minimum = Date()                       
         datePicker.date = Date()
         datePicker.dateChanged = { date in
             print(date)

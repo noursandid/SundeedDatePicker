@@ -14,15 +14,17 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         datePicker.display = [
-//            .fullDate("dd MMMM yyyy"),
-            .month("MMM"),
-            .day("dd", 50),
-            .year("yyyy"),
-            .hour12(40),
-            .minute(40),
-            .second(40),
-            .ampm(50)
+//            .fullDate(format: "dd MMMM yyyy"),
+            .month(format: "MMM"),
+            .day(format: "dd", size: 50),
+            .year(format: "yyyy"),
+            .hour12(size: 40),
+            .minute(size: 40),
+            .second(size: 40),
+            .ampm(size: 50)
         ]
+        
+        datePicker.minimum = Date()
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd MM yyyy HH:mm:ss"

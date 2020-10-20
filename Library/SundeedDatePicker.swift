@@ -10,15 +10,15 @@ import UIKit
 
 class SundeedDatePicker: UIPickerView {
     public enum Display {
-        case year(String, CGFloat? = nil)
-        case month(String, CGFloat? = nil)
-        case day(String, CGFloat? = nil)
-        case hour24(CGFloat? = nil)
-        case hour12(CGFloat? = nil)
-        case ampm(CGFloat? = nil)
-        case minute(CGFloat? = nil)
-        case second(CGFloat? = nil)
-        case fullDate(String, CGFloat? = nil)
+        case year(format: String, size: CGFloat? = nil)
+        case month(format: String, size: CGFloat? = nil)
+        case day(format: String, size: CGFloat? = nil)
+        case hour24(size: CGFloat? = nil)
+        case hour12(size: CGFloat? = nil)
+        case ampm(size: CGFloat? = nil)
+        case minute(size: CGFloat? = nil)
+        case second(size: CGFloat? = nil)
+        case fullDate(format: String, size: CGFloat? = nil)
         
         func numberOfRows(for date: Date) -> Int {
             switch self {
@@ -119,6 +119,28 @@ class SundeedDatePicker: UIPickerView {
                 return width
             }
         }
+        var granularity: Calendar.Component {
+            switch self {
+            case .second:
+                return .second
+            case .minute:
+                return .minute
+            case .hour12:
+                return .hour
+            case .hour24:
+                return .hour
+            case .ampm:
+                return .hour
+            case .day:
+                return .day
+            case .month:
+                return .month
+            case .year:
+                return .year
+            case .fullDate:
+                return .day
+            }
+        }
     }
     
     private var formatter: DateFormatter = DateFormatter()
@@ -130,6 +152,17 @@ class SundeedDatePicker: UIPickerView {
             dateChanged?(date)
         }
     }
+    var minimum: Date? {
+        didSet {
+            reloadPicker()
+        }
+    }
+    var maximum: Date? {
+        didSet {
+            reloadPicker()
+        }
+    }
+    
     var display: [Display] = [] {
         didSet {
             reloadPicker()
@@ -166,14 +199,14 @@ class SundeedDatePicker: UIPickerView {
                 let firstDate = formatter.date(from: "01 01 0001")
                 let row = Calendar.current.dateComponents([.day], from: firstDate!, to: date).day ?? 0
                 selectRow(display.includeIndexAt0 ? row : row-1,
-                                     inComponent: component,
-                                     animated: true)
+                          inComponent: component,
+                          animated: true)
             } else if case .ampm = display {
                 formatter.dateFormat = display.rowFormat
                 let row = formatter.string(from: date).contains("A") ? 0 : 1
                 selectRow(row,
-                                     inComponent: component,
-                                     animated: true)
+                          inComponent: component,
+                          animated: true)
             } else if var row = Int(formatter.string(from: date)),
                 ((display.includeIndexAt0 && row-1 >= 0) || (!display.includeIndexAt0 && row > 0)) {
                 if case .hour12 = display {
@@ -185,6 +218,94 @@ class SundeedDatePicker: UIPickerView {
             }
         }
     }
+    
+    func getDateByComponents(_ date: Date, display: Display) -> Date {
+        guard let mainDate = self.date else { return Date()}
+        let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
+        let mainDateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: mainDate)
+        var components = DateComponents()
+        switch display {
+        case .second:
+            components.year = mainDateComponents.year
+            components.month = mainDateComponents.month
+            components.day = mainDateComponents.day
+            components.hour = mainDateComponents.hour
+            components.minute = mainDateComponents.minute
+            components.second = dateComponents.second
+        case .minute:
+            components.year = mainDateComponents.year
+            components.month = mainDateComponents.month
+            components.day = mainDateComponents.day
+            components.hour = mainDateComponents.hour
+            components.minute = dateComponents.minute
+            components.second = mainDateComponents.second
+        case .hour12:
+            var isAM: Bool = false
+            for index in 0..<self.display.count {
+                let selected = selectedRow(inComponent: index)
+                let display = self.display[index]
+                if case .ampm = display {
+                    let row = display.includeIndexAt0 ? selected : selected+1
+                    isAM = row == 0
+                }
+            }
+            components.year = mainDateComponents.year
+            components.month = mainDateComponents.month
+            components.day = mainDateComponents.day
+            components.hour = isAM ? dateComponents.hour : (dateComponents.hour ?? 0) + 12
+            components.minute = mainDateComponents.minute
+            components.second = mainDateComponents.second
+        case .hour24, .ampm:
+            components.year = mainDateComponents.year
+            components.month = mainDateComponents.month
+            components.day = mainDateComponents.day
+            components.hour = dateComponents.hour
+            components.minute = mainDateComponents.minute
+            components.second = mainDateComponents.second
+        case .day:
+            components.year = mainDateComponents.year
+            components.month = mainDateComponents.month
+            components.day = dateComponents.day
+            components.hour = mainDateComponents.hour
+            components.minute = mainDateComponents.minute
+            components.second = mainDateComponents.second
+        case .month:
+            components.year = mainDateComponents.year
+            components.month = dateComponents.month
+            components.day = mainDateComponents.day
+            components.hour = mainDateComponents.hour
+            components.minute = mainDateComponents.minute
+            components.second = mainDateComponents.second
+        case .year:
+            components.year = dateComponents.year
+            components.month = mainDateComponents.month
+            components.day = mainDateComponents.day
+            components.hour = mainDateComponents.hour
+            components.minute = mainDateComponents.minute
+            components.second = mainDateComponents.second
+        case .fullDate:
+            components.year = dateComponents.year
+            components.month = dateComponents.month
+            components.day = dateComponents.day
+            components.hour = dateComponents.hour
+            components.minute = dateComponents.minute
+            components.second = dateComponents.second
+        }
+        return calendar.date(from: components) ?? Date()
+    }
+    
+    func dateIsEnabled(_ date: Date, display: Display) -> Bool {
+        let date = getDateByComponents(date, display: display)
+        let calendar = Calendar.current
+        if let minimum = self.minimum, calendar.compare(date, to: minimum, toGranularity: display.granularity) == .orderedAscending {
+            return false
+        }
+        if let maximum = self.maximum, calendar.compare(date, to: maximum, toGranularity: display.granularity) == .orderedDescending {
+            return false
+        }
+        return true
+    }
 }
 
 extension SundeedDatePicker: UIPickerViewDataSource, UIPickerViewDelegate {
@@ -195,7 +316,7 @@ extension SundeedDatePicker: UIPickerViewDataSource, UIPickerViewDelegate {
         return display[component].numberOfRows(for: self.date ?? formatter.date(from: "01 01 2000")!)
     }
     
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
         let display = self.display[component]
         let rowFormat = display.rowFormat
         let displayFormat = display.displayFormat
@@ -206,14 +327,16 @@ extension SundeedDatePicker: UIPickerViewDataSource, UIPickerViewDelegate {
                                              value: row,
                                              to: formatter.date(from: "01 01 0001") ?? Date()) ?? Date()
             formatter.dateFormat = displayFormat
-            return formatter.string(from: date)
+            let color: UIColor = dateIsEnabled(date, display: display) ? .darkText : .lightGray
+            return NSAttributedString(string: formatter.string(from: date), attributes: [.foregroundColor: color])
         } else if case .ampm = display {
-            return row == 0 ? "AM" : "PM"
+            return NSAttributedString(string: row == 0 ? "AM" : "PM")
         } else if let date = formatter.date(from: "\(display.includeIndexAt0 ? row : row+1)") {
             formatter.dateFormat = displayFormat
-            return formatter.string(from: date)
+            let color: UIColor = dateIsEnabled(date, display: display) ? .darkText : .lightGray
+            return NSAttributedString(string: formatter.string(from: date), attributes: [.foregroundColor: color])
         }
-        return "---"
+        return NSAttributedString(string: "---")
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
@@ -252,4 +375,5 @@ extension SundeedDatePicker: UIPickerViewDataSource, UIPickerViewDelegate {
         let defaultWidth = (bounds.width - settedWidths) / numberOfUnsettedWidths
         return self.display[component].rowWidth ?? defaultWidth
     }
+    
 }

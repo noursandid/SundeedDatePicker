@@ -29,7 +29,8 @@ class ViewController: UIViewController {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd MM yyyy HH:mm:ss"
         datePicker.date = dateFormatter.date(from: "14 04 2020 18:34:30")
-        datePicker.dateChanged = { date in
+        datePicker.dateChanged = { datePicker, date in
+            print(datePicker.isValid)
             print(dateFormatter.string(from: date!))
         }
     }

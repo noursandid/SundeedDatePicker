@@ -39,7 +39,7 @@ class ViewController: UIViewController {
                                .ampm(size: 50) ]
         datePicker.minimum = Date()                       
         datePicker.date = Date()
-        datePicker.dateChanged = { date in
+        datePicker.dateChanged = { datePicker, date in
             print(date)
         }
     }

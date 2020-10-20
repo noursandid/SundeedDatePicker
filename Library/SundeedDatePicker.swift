@@ -145,11 +145,31 @@ class SundeedDatePicker: UIPickerView {
     
     private var formatter: DateFormatter = DateFormatter()
     
-    var dateChanged: ((Date?)->Void)?
+    var dateChanged: ((SundeedDatePicker, Date?)->Void)?
+    var isValid: Bool {
+        var isValid: Bool = true
+        if let date = date {
+            let components = display.map{$0.granularity}
+            let dateComponents = Calendar.current.dateComponents(Set(components), from: date)
+            if let minimum = minimum, let currentDate = Calendar.current.date(from: dateComponents){
+                let minimumComponents = Calendar.current.dateComponents(Set(components), from: minimum)
+                if let minimumDate = Calendar.current.date(from: minimumComponents) {
+                    isValid = currentDate.compare(minimumDate) != .orderedAscending
+                }
+            }
+            if let maximum = maximum, let currentDate = Calendar.current.date(from: dateComponents){
+                let maximumComponents = Calendar.current.dateComponents(Set(components), from: maximum)
+                if let maximumDate = Calendar.current.date(from: maximumComponents), isValid {
+                    isValid = currentDate.compare(maximumDate) != .orderedDescending
+                }
+            }
+        }
+        return isValid
+    }
     var date: Date? {
         didSet {
             reloadPicker()
-            dateChanged?(date)
+            dateChanged?(self, date)
         }
     }
     var minimum: Date? {
@@ -225,21 +245,17 @@ class SundeedDatePicker: UIPickerView {
         let dateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
         let mainDateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: mainDate)
         var components = DateComponents()
+        components.year = mainDateComponents.year
+        components.month = mainDateComponents.month
+        components.day = mainDateComponents.day
+        components.hour = mainDateComponents.hour
+        components.minute = mainDateComponents.minute
+        components.second = mainDateComponents.second
         switch display {
         case .second:
-            components.year = mainDateComponents.year
-            components.month = mainDateComponents.month
-            components.day = mainDateComponents.day
-            components.hour = mainDateComponents.hour
-            components.minute = mainDateComponents.minute
             components.second = dateComponents.second
         case .minute:
-            components.year = mainDateComponents.year
-            components.month = mainDateComponents.month
-            components.day = mainDateComponents.day
-            components.hour = mainDateComponents.hour
             components.minute = dateComponents.minute
-            components.second = mainDateComponents.second
         case .hour12:
             var isAM: Bool = false
             for index in 0..<self.display.count {
@@ -250,40 +266,15 @@ class SundeedDatePicker: UIPickerView {
                     isAM = row == 0
                 }
             }
-            components.year = mainDateComponents.year
-            components.month = mainDateComponents.month
-            components.day = mainDateComponents.day
             components.hour = isAM ? dateComponents.hour : (dateComponents.hour ?? 0) + 12
-            components.minute = mainDateComponents.minute
-            components.second = mainDateComponents.second
         case .hour24, .ampm:
-            components.year = mainDateComponents.year
-            components.month = mainDateComponents.month
-            components.day = mainDateComponents.day
             components.hour = dateComponents.hour
-            components.minute = mainDateComponents.minute
-            components.second = mainDateComponents.second
         case .day:
-            components.year = mainDateComponents.year
-            components.month = mainDateComponents.month
             components.day = dateComponents.day
-            components.hour = mainDateComponents.hour
-            components.minute = mainDateComponents.minute
-            components.second = mainDateComponents.second
         case .month:
-            components.year = mainDateComponents.year
             components.month = dateComponents.month
-            components.day = mainDateComponents.day
-            components.hour = mainDateComponents.hour
-            components.minute = mainDateComponents.minute
-            components.second = mainDateComponents.second
         case .year:
             components.year = dateComponents.year
-            components.month = mainDateComponents.month
-            components.day = mainDateComponents.day
-            components.hour = mainDateComponents.hour
-            components.minute = mainDateComponents.minute
-            components.second = mainDateComponents.second
         case .fullDate:
             components.year = dateComponents.year
             components.month = dateComponents.month
